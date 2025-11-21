@@ -107,6 +107,8 @@ class RubricState(rx.State):
     next_rubric_id: int = 15
     search_query: str = ""
     filter_project_id: str = "All"
+    project_search_input: str = ""
+    is_project_dropdown_open: bool = False
     is_add_open: bool = False
     is_edit_open: bool = False
     is_delete_open: bool = False
@@ -251,6 +253,33 @@ class RubricState(rx.State):
     @rx.event
     def set_filter_project_id(self, value: str):
         self.filter_project_id = value
+
+    @rx.event
+    def set_project_search_input(self, value: str):
+        self.project_search_input = value
+        self.is_project_dropdown_open = True
+        if value == "":
+            self.filter_project_id = "All"
+
+    @rx.event
+    def open_project_dropdown(self):
+        self.is_project_dropdown_open = True
+
+    @rx.event
+    def close_project_dropdown(self):
+        self.is_project_dropdown_open = False
+
+    @rx.event
+    def select_project_filter(self, id: int, name: str):
+        self.filter_project_id = str(id)
+        self.project_search_input = name
+        self.is_project_dropdown_open = False
+
+    @rx.event
+    def select_all_projects(self):
+        self.filter_project_id = "All"
+        self.project_search_input = ""
+        self.is_project_dropdown_open = False
 
     @rx.event
     def set_form_name(self, value: str):

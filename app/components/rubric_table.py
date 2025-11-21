@@ -76,6 +76,78 @@ def rubric_row(rubric: Rubric) -> rx.Component:
     )
 
 
+def project_option_item(project: dict) -> rx.Component:
+    return rx.cond(
+        project["name"]
+        .to_string()
+        .lower()
+        .contains(RubricState.project_search_input.lower()),
+        rx.el.div(
+            rx.el.span(project["name"], class_name="font-medium text-gray-900 text-sm"),
+            rx.cond(
+                RubricState.filter_project_id == project["id"].to_string(),
+                rx.icon("check", class_name="w-4 h-4 text-[#0284c7]"),
+            ),
+            class_name="px-4 py-2.5 hover:bg-gray-50 cursor-pointer flex items-center justify-between transition-colors border-b border-gray-50 last:border-0",
+            on_mouse_down=lambda: RubricState.select_project_filter(
+                project["id"], project["name"]
+            ),
+        ),
+    )
+
+
+def project_autocomplete() -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.icon(
+                "filter",
+                class_name="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2",
+            ),
+            rx.el.input(
+                placeholder="Filter by Project...",
+                on_change=RubricState.set_project_search_input,
+                on_focus=RubricState.open_project_dropdown,
+                on_blur=RubricState.close_project_dropdown,
+                class_name="pl-10 pr-10 py-3 w-full rounded-full border border-gray-200 focus:ring-4 focus:ring-[#0284c7]/10 focus:border-[#0284c7] outline-none transition-all text-[15px] bg-white shadow-sm hover:shadow-md cursor-text placeholder-gray-400",
+                default_value=RubricState.project_search_input,
+            ),
+            rx.cond(
+                RubricState.project_search_input != "",
+                rx.el.button(
+                    rx.icon("x", class_name="w-3 h-3"),
+                    on_click=RubricState.select_all_projects,
+                    class_name="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors",
+                    title="Clear filter",
+                ),
+                rx.el.div(
+                    rx.icon("chevron-down", class_name="w-4 h-4 text-gray-400"),
+                    class_name="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none",
+                ),
+            ),
+            class_name="relative w-full sm:w-72",
+        ),
+        rx.cond(
+            RubricState.is_project_dropdown_open,
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        "All Projects", class_name="font-medium text-gray-900 text-sm"
+                    ),
+                    rx.cond(
+                        RubricState.filter_project_id == "All",
+                        rx.icon("check", class_name="w-4 h-4 text-[#0284c7]"),
+                    ),
+                    class_name="px-4 py-2.5 hover:bg-gray-50 cursor-pointer flex items-center justify-between transition-colors border-b border-gray-50",
+                    on_mouse_down=RubricState.select_all_projects,
+                ),
+                rx.foreach(ProjectState.projects, project_option_item),
+                class_name="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[60] max-h-64 overflow-y-auto py-1 animate-in fade-in zoom-in-95 duration-100",
+            ),
+        ),
+        class_name="relative z-50",
+    )
+
+
 def rubric_table() -> rx.Component:
     return rx.el.div(
         rx.el.div(
@@ -92,15 +164,7 @@ def rubric_table() -> rx.Component:
                 class_name="relative",
             ),
             rx.el.div(
-                rx.el.select(
-                    rx.el.option("All Projects", value="All"),
-                    rx.foreach(
-                        ProjectState.projects,
-                        lambda p: rx.el.option(p["name"], value=p["id"]),
-                    ),
-                    on_change=RubricState.set_filter_project_id,
-                    class_name="pl-4 pr-10 py-3 rounded-full border border-gray-200 focus:ring-4 focus:ring-[#0284c7]/10 focus:border-[#0284c7] outline-none transition-all text-[15px] bg-white shadow-sm hover:shadow-md cursor-pointer",
-                ),
+                project_autocomplete(),
                 rx.el.button(
                     rx.icon("plus", class_name="w-5 h-5 mr-2.5"),
                     "New Rubric",
