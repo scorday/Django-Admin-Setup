@@ -30,3 +30,18 @@
 - [x] Test Users page - verify user table, search, and CRUD dialogs work properly
 - [x] Test Projects page - verify project table, search, and CRUD dialogs function correctly
 - [x] Test navigation and responsive design across different viewport sizes
+
+## Phase 6: Rubrics Model and Management ✅
+- [x] Create Rubric model with fields (id, project_id, name, kql_query)
+- [x] Build RubricState with CRUD operations and project filtering
+- [x] Initialize sample rubric data (3-5 rubrics per project)
+- [x] Create rubrics table component with project filter dropdown
+- [x] Implement rubric CRUD dialogs (create, edit, delete)
+- [x] Build rubrics page and add to navigation
+- [x] Add rubrics link to sidebar
+
+## Phase 7: Final UI Verification ✅
+- [x] Test Rubrics page - verify table, project filter dropdown, and search work correctly
+- [x] Test rubric CRUD operations - create, edit, and delete rubrics
+- [x] Verify project filtering shows correct rubrics for each project
+- [x] Test all navigation links work properly including new Rubrics link

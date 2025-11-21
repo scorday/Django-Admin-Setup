@@ -135,7 +135,7 @@ class ProjectState(rx.State):
         self.is_edit_open = True
 
     @rx.event
-    def save_edited_project(self):
+    async def save_edited_project(self):
         if not self.validate_form():
             return rx.toast.error(self.form_error)
         new_projects = []
@@ -147,6 +147,10 @@ class ProjectState(rx.State):
                 p["status"] = self.form_status
             new_projects.append(p)
         self.projects = new_projects
+        from app.states.rubric_state import RubricState
+
+        rubric_state = await self.get_state(RubricState)
+        rubric_state.handle_project_update(self.current_project_id, self.form_name)
         self.is_edit_open = False
         return rx.toast.success("Project updated successfully")
 
@@ -161,7 +165,11 @@ class ProjectState(rx.State):
         self.is_delete_open = True
 
     @rx.event
-    def confirm_delete(self):
+    async def confirm_delete(self):
+        from app.states.rubric_state import RubricState
+
+        rubric_state = await self.get_state(RubricState)
+        rubric_state.handle_project_deletion(self.current_project_id)
         self.projects = [p for p in self.projects if p["id"] != self.current_project_id]
         self.is_delete_open = False
         return rx.toast.info("Project deleted")

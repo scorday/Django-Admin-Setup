@@ -43,6 +43,7 @@ def sidebar() -> rx.Component:
             sidebar_item("Dashboard", "layout-dashboard", "/"),
             sidebar_item("Users", "users", "/users"),
             sidebar_item("Projects", "folder-kanban", "/projects"),
+            sidebar_item("Rubrics", "file-code", "/rubrics"),
             sidebar_item("Settings", "settings", "/settings"),
             class_name="flex flex-col gap-1.5",
         ),

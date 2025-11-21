@@ -2,6 +2,7 @@ import reflex as rx
 from app.pages.dashboard import dashboard_page
 from app.pages.users import users_page
 from app.pages.projects import projects_page
+from app.pages.rubrics import rubrics_page
 
 app = rx.App(
     theme=rx.theme(appearance="light"),
@@ -17,3 +18,4 @@ app = rx.App(
 app.add_page(dashboard_page, route="/")
 app.add_page(users_page, route="/users")
 app.add_page(projects_page, route="/projects")
+app.add_page(rubrics_page, route="/rubrics")

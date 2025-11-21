@@ -18,3 +18,11 @@ class Project(TypedDict):
     owner_id: int
     status: str
     created_at: str
+
+
+class Rubric(TypedDict):
+    id: int
+    project_id: int
+    project_name: str
+    name: str
+    kql_query: str
